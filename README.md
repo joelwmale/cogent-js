@@ -29,9 +29,10 @@ const query = new Query();
 
 // /posts?filter[name]=Bob&include=posts,comments&orderBy=-created_at
 const url = query
-  .where("name", "Bob")
-  .include("posts", "comments")
-  .orderBy("-created_at")
+  .for('posts')
+  .where('name', 'Bob')
+  .include('posts', 'comments')
+  .orderBy('-created_at')
   .get();
 ```
 
