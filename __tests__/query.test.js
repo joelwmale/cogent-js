@@ -16,7 +16,7 @@ describe('Query builder', () => {
 
     const expected = '/pizza?includes=toppings&select=name';
 
-    expect(query.url()).toEqual(expected); 
+    expect(query.url()).toEqual(expected);
   });
 
   test('it can prepend an api url', () => {
