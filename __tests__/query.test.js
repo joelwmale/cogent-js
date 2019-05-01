@@ -51,6 +51,16 @@ describe('Query builder', () => {
     expect(query.url()).toEqual(expected);
   });
 
+  test('it builds a simple query with whereIn()', () => {
+    const query = new Query();
+
+    query.for('pizza').whereIn('topping', ['beef', 'cheese']);
+
+    const expected = '/pizza?filter[topping]=beef,cheese';
+
+    expect(query.url()).toEqual(expected);
+  });
+
   test('it builds a simple query with append()', () => {
     const query = new Query();
 
@@ -107,18 +117,18 @@ describe('Query builder', () => {
     expect(query.url()).toEqual(expected);
   });
 
-  // test("it can append params", () => {
-  //   const query = new Query();
+  test('it can append params', () => {
+    const query = new Query();
 
-  //   query
-  //     .for("pizza")
-  //     .where("name", "meatlovers")
-  //     .params({ test: true });
+    query
+      .for('pizza')
+      .where('name', 'meatlovers')
+      .params({format: 'admin'});
 
-  //   const expected = "/pizza?filter[name]=meatlovers&test=true";
+    const expected = '/pizza?filter[name]=meatlovers&format=admin';
 
-  //   expect(query.url()).toEqual(expected);
-  // });
+    expect(query.url()).toEqual(expected);
+  });
 
   test('it builds a semi-complex query', () => {
     const query = new Query();
@@ -128,10 +138,11 @@ describe('Query builder', () => {
       .where('name', 'macaroni_and_cheese')
       .include('toppings')
       .append('full_name')
-      .select('name', 'ratings');
+      .select('name', 'ratings')
+      .params({format: 'basic'});
 
     const expected =
-      '/pizza?include=toppings&append=full_name&fields=name,ratings&filter[name]=macaroni_and_cheese';
+      '/pizza?include=toppings&append=full_name&fields=name,ratings&filter[name]=macaroni_and_cheese&format=basic';
 
     expect(query.url()).toEqual(expected);
   });

@@ -69,62 +69,69 @@ const url = query.for('users').where('name', 'Bob').url()); // or .get();
 
 # Available Methods
 
-## Where
+## where()
 
 ```js
 // /users?filter[name]=Bob
 const url = query.for('users').where('name', 'Bob').url()); // or .get();
 ```
 
-## Include
+## whereIn()
 
 ```js
-// /pouserssts?include=posts
-const url = query.for('users').include('posts').url()); // or .get();
+// /users?filter[name]=bob,jerry
+const url = query.for('users').whereIn('name', ['bob', 'jerry']).url()); // or .get();
 ```
 
-## Append
-
-```js
-// /users?append=full_name,age
-const url = query.for('users').append('full_name', 'age').url()); // or .get();
-```
-
-## Select
+## select()
 
 ```js
 // /users?fields=name,age,date_of_birth
 const url = query.for('users').select('name', 'age', 'date_of_birth').url()); // or .get();
 ```
 
-## Limit
+## include()
+
+```js
+// /pouserssts?include=posts
+const url = query.for('users').include('posts').url()); // or .get();
+```
+
+## append()
+
+```js
+// /users?append=full_name,age
+const url = query.for('users').append('full_name', 'age').url()); // or .get();
+```
+
+## limit()
 
 ```js
 // /users?limit=5
 const url = query.for('users').limit(5).url()); // or .get();
 ```
 
-## Pagination
+## limit() | Pagination
 
 ```js
 // /users?page=2&limit=5
 const url = query.for('users').limit(5).page(2).url()); // or .get();
 ```
 
-## Sort
+## sort()
 
 ```js
 // /users?sort=-name,age
 const url = query.for('users').sort('-name', 'age').url()); // or .get();
 ```
 
-## Additional parameters
+## Custom parameters
 
-If required, you can also append your own parameters by passing an object to the `params` function.
+If required, you can also append your own custom parameters to the url by passing an object to the `params()` function.
 
 ```js
-// /users?username=test
-const url = query.for('users').params({ 'username': 'test' }).url()); // or .get();
+// /users?format=admin
+const url = query.for('users').params({ format: 'admin' }).url()); // or .get();
 ```
 
 # Customizing Query Parameters

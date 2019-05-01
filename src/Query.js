@@ -7,9 +7,11 @@ export default class Query {
     //   throw new Error('Please pass in an options object to the constructor.');
     // }
 
+    // the model to execute the query against
+    // set by calling .for(model)
     this.model = null;
 
-    // Base url if passed
+    // will use base_url if passed in
     this.base_url = options.base_url || null;
 
     // default filter names
@@ -23,15 +25,16 @@ export default class Query {
       sort: 'sort'
     };
 
+    // initialise variables to hold 
+    // the urls data
     this.includes = [];
     this.appends = [];
     this.sorts = [];
-    this.pageValue = null;
-    this.limitValue = null;
-    this.params = null;
-
     this.fields = {};
     this.filters = {};
+    this.pageValue = null;
+    this.limitValue = null;
+    this.paramsObj = null;
 
     this.parser = new Parser(this);
   }
@@ -58,7 +61,7 @@ export default class Query {
 
   parseQuery() {
     if (!this.model) {
-      throw new Error('Please call the for() method before adding filters.');
+      throw new Error('Please call the for() method before adding filters or calling url() / get().');
     }
 
     return `/${this.model}${this.parser.parse()}`;
@@ -81,7 +84,7 @@ export default class Query {
 
   select(...fields) {
     if (fields.length === 0) {
-      throw new Error('You must provide an array to the fields() method.');
+      throw new Error('The fields() function takes a single argument of an array.');
     }
 
     // single entity .fields(['age', 'firstname'])
@@ -101,10 +104,10 @@ export default class Query {
 
   where(key, value) {
     if (key === undefined || value === undefined)
-      throw new Error('The KEY and VALUE are required on where() method.');
+      throw new Error('The where() function takes 2 arguments both of string values.');
 
     if (Array.isArray(value) || value instanceof Object)
-      throw new Error('The VALUE must be primitive on where() method.');
+      throw new Error('The second argument to the where() function must be a string. Use whereIn() if you need to pass in an array.');
 
     this.filters[key] = value;
 
@@ -113,7 +116,7 @@ export default class Query {
 
   whereIn(key, array) {
     if (!Array.isArray(array))
-      throw new Error('The second argument on whereIn() method must be an array.');
+      throw new Error('The second argument to the whereIn() function must be an array.');
 
     this.filters[key] = array.join(',');
 
@@ -128,7 +131,7 @@ export default class Query {
 
   page(value) {
     if (!Number.isInteger(value)) {
-      throw new Error('The VALUE must be an integer on page() method.');
+      throw new Error('The page() function takes a single argument of a number');
     }
 
     this.pageValue = value;
@@ -138,7 +141,7 @@ export default class Query {
 
   limit(value) {
     if (!Number.isInteger(value)) {
-      throw new Error('The VALUE must be an integer on limit() method.');
+      throw new Error('The limit() function takes a single argument of a number.');
     }
 
     this.limitValue = value;
@@ -148,11 +151,12 @@ export default class Query {
 
   params(params) {
     if (params === undefined || params.constructor !== Object) {
-      throw new Error('You must pass a params/object as param.');
+      throw new Error('The params() function takes a single argument of an object.');
     }
 
-    this.params = params;
-
+    this.paramsObj = params;
+    
     return this;
   }
+
 }

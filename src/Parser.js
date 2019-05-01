@@ -1,8 +1,8 @@
 import qs from 'qs';
 
 export default class Parser {
-  constructor(builder) {
-    this.builder = builder;
+  constructor(query) {
+    this.query = query;
     this.uri = '';
   }
 
@@ -20,42 +20,6 @@ export default class Parser {
     return this.uri;
   }
 
-  /**
-   * Helpers
-   */
-
-  hasIncludes() {
-    return this.builder.includes.length > 0;
-  }
-
-  hasAppends() {
-    return this.builder.appends.length > 0;
-  }
-
-  hasFields() {
-    return Object.keys(this.builder.fields).length > 0;
-  }
-
-  hasFilters() {
-    return Object.keys(this.builder.filters).length > 0;
-  }
-
-  hasSorts() {
-    return this.builder.sorts.length > 0;
-  }
-
-  hasPage() {
-    return this.builder.pageValue !== null;
-  }
-
-  hasLimit() {
-    return this.builder.limitValue !== null;
-  }
-
-  hasParams() {
-    return this.builder.params !== null;
-  }
-
   prepend() {
     return this.uri === '' ? '?' : '&';
   }
@@ -63,88 +27,88 @@ export default class Parser {
   /**
    * Parsers
    */
-
   includes() {
-    if (!this.hasIncludes()) {
+    if (!this.query.includes.length > 0) {
       return;
     }
 
     this.uri +=
       `${this.prepend() +
-      this.builder.queryParameters.includes 
+      this.query.queryParameters.includes 
       }=${ 
-      this.builder.includes}`;
+      this.query.includes}`;
   }
 
   appends() {
-    if (!this.hasAppends()) {
+    if (!this.query.appends.length > 0) {
       return;
     }
 
     this.uri +=
       `${this.prepend() +
-      this.builder.queryParameters.appends 
+      this.query.queryParameters.appends 
       }=${ 
-      this.builder.appends}`;
+      this.query.appends}`;
   }
 
   fields() {
-    if (!this.hasFields()) {
+    if (!Object.keys(this.query.fields).length > 0) {
       return;
     }
 
-    const fields = { [this.builder.queryParameters.fields]: this.builder.fields };
+    const fields = { [this.query.queryParameters.fields]: this.query.fields };
     this.uri += this.prepend() + qs.stringify(fields, { encode: false });
   }
 
   filters() {
-    if (!this.hasFilters()) {
+    if (!Object.keys(this.query.filters).length > 0) {
       return;
     }
 
-    const filters = { [this.builder.queryParameters.filters]: this.builder.filters };
+    const filters = { [this.query.queryParameters.filters]: this.query.filters };
     this.uri += this.prepend() + qs.stringify(filters, { encode: false });
   }
 
   sorts() {
-    if (!this.hasSorts()) {
+    if (!this.query.sorts.length > 0) {
       return;
     }
 
     this.uri +=
-      `${this.prepend() + this.builder.queryParameters.sort  }=${  this.builder.sorts}`;
+      `${this.prepend() + this.query.queryParameters.sort  }=${  this.query.sorts}`;
   }
 
   page() {
-    if (!this.hasPage()) {
+    if (this.query.pageValue === null) {
       return;
     }
 
     this.uri +=
       `${this.prepend() +
-      this.builder.queryParameters.page 
+      this.query.queryParameters.page 
       }=${ 
-      this.builder.pageValue}`;
+      this.query.pageValue}`;
   }
 
   limit() {
-    if (!this.hasLimit()) {
+    if (this.query.limitValue === null) {
       return;
     }
 
     this.uri +=
       `${this.prepend() +
-      this.builder.queryParameters.limit 
+      this.query.queryParameters.limit 
       }=${ 
-      this.builder.limitValue}`;
+      this.query.limitValue}`;
   }
 
   params() {
-    if (!this.hasParams()) {
+    if (this.query.paramsObj === null) {
       return;
     }
 
+
     this.uri +=
-      this.prepend() + qs.stringify(this.builder.params, { encode: false });
+      this.prepend() + qs.stringify(this.query.paramsObj, { encode: false });
   }
 }
