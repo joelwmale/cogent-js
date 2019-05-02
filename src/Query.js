@@ -48,15 +48,20 @@ export default class Query {
 
   // return the parsed url
   get() {
-    return this.base_url
-      ? this.base_url + this.parseQuery()
-      : this.parseQuery();
+    // generate the url
+    const url = this.base_url ? this.base_url + this.parseQuery() : this.parseQuery();
+    // reset the url so the query object can be re-used
+    this.reset();
+    return url;
   }
 
   url() {
-    return this.base_url
-      ? this.base_url + this.parseQuery()
-      : this.parseQuery();
+    return this.get();
+  }
+
+  reset() {
+    // reset the uri
+    this.parser.uri = '';
   }
 
   parseQuery() {

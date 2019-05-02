@@ -2,4 +2,3 @@
 /build/
 /coverage/
 yarn-error.log
-docker-compose.yml

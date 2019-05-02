@@ -130,6 +130,29 @@ describe('Query builder', () => {
     expect(query.url()).toEqual(expected);
   });
 
+  test('the query object can be reused', () => {
+    const query = new Query();
+
+    const actualOne = query
+      .for('pizza')
+      .where('name', 'macaroni_and_cheese')
+      .get();
+
+    const expectedOne =
+      '/pizza?filter[name]=macaroni_and_cheese';
+
+    const actualTwo = query
+      .for('pizza')
+      .where('name', 'meatlovers')
+      .get();
+
+    const expectedTwo =
+      '/pizza?filter[name]=meatlovers';
+
+    expect(actualOne).toEqual(expectedOne);
+    expect(actualTwo).toEqual(expectedTwo);
+  });
+
   test('it builds a semi-complex query', () => {
     const query = new Query();
 
