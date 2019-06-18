@@ -5,7 +5,14 @@
 ### Changes
 - None
 
-[unreleased]: https://github.com/joelwmale/cogent-js/compare/1.0.3...HEAD
+[unreleased]: https://github.com/joelwmale/cogent-js/compare/1.0.4...HEAD
+
+## [1.0.4] - 2019-06-17
+
+### Changes
+- Update npm dependencies to resolve security concerns
+
+[1.0.4]: https://github.com/joelwmale/cogent-js/compare/1.0.3...1.0.4
 
 ## [1.0.3] - 2019-05-02
 
