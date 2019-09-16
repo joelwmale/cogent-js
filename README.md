@@ -144,7 +144,7 @@ const { Query } = require("cogent-js");
 const query = new Query({
   queryParameters: {
     include: "include_custom",
-    filter: "filter_custom",
+    filters: "filter_custom",
     sort: "sort_custom",
     fields: "fields_custom",
     append: "append_custom",
