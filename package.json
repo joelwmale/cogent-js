@@ -1,21 +1,18 @@
 {
   "name": "cogent-js",
-  "version": "1.0.4",
+  "version": "0.0.1",
   "description": "A simple and elegant way to build urls for your REST API",
   "main": "build/index.js",
   "scripts": {
     "build": "babel src -d build",
     "prepare": "yarn build && yarn cc",
     "test": "jest --watch --coverage",
-    "cc": "jest --coverage"
+    "cc": "jest --coverage",
+    "publish:npm": "rm -rf dist && mkdir dist && babel ./src -d dist --copy-files"
   },
   "jest": {
     "coverageDirectory": "./coverage/",
     "collectCoverage": true
-  },
-  "repository": {
-    "type": "git",
-    "url": "git@github.com:joelwmale/cogent-js.git"
   },
   "moduleDirectories": [
     "src"
@@ -23,19 +20,15 @@
   "keywords": [
     "javascript",
     "react",
-    "typescript",
+    "@_@",
     "api",
     "rest",
     "query",
     "builder",
     "laravel"
   ],
-  "author": "Joel Male",
+  "author": "Joel Male, custom adapter Pavel Khavilov",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/joelwmale/cogent-js/issues"
-  },
-  "homepage": "https://github.com/joelwmale/cogent-js#readme",
   "devDependencies": {
     "@babel/cli": "^7.2.3",
     "@babel/core": "^7.3.3",

@@ -1,9 +1,9 @@
-import qs from 'qs';
+import qs from "qs";
 
 export default class Parser {
   constructor(query) {
     this.query = query;
-    this.uri = '';
+    this.uri = "";
   }
 
   // parse the final query string
@@ -21,61 +21,61 @@ export default class Parser {
   }
 
   prepend() {
-    return this.uri === '' ? '?' : '&';
+    return this.uri === "" ? "?" : "&";
   }
 
   /**
    * Parsers
    */
   includes() {
-    if (!this.query.includes.length > 0) {
-      return;
-    }
+    const { includes, queryParameters } = this.query;
+    if (!includes.length > 0) return;
 
-    this.uri +=
-      `${this.prepend() +
-      this.query.queryParameters.includes 
-      }=${ 
-      this.query.includes}`;
+    this.uri += `${this.prepend() + queryParameters.includes}=${includes}`;
   }
 
   appends() {
-    if (!this.query.appends.length > 0) {
-      return;
-    }
+    const { appends, queryParameters } = this.query;
 
-    this.uri +=
-      `${this.prepend() +
-      this.query.queryParameters.appends 
-      }=${ 
-      this.query.appends}`;
+    if (!this.query.appends.length > 0) return;
+
+    this.uri += `${this.prepend() + queryParameters.appends}=${appends}`;
   }
 
   fields() {
-    if (!Object.keys(this.query.fields).length > 0) {
-      return;
-    }
+    const { fields: qFields, queryParameters } = this.query;
 
-    const fields = { [this.query.queryParameters.fields]: this.query.fields };
+    if (!Object.keys(qFields).length) return;
+
+    const fields = { [queryParameters.fields]: qFields };
     this.uri += this.prepend() + qs.stringify(fields, { encode: false });
   }
 
   filters() {
-    if (!Object.keys(this.query.filters).length > 0) {
-      return;
-    }
+    const { filters: fil, queryParameters } = this.query;
+    if (!Object.keys(fil).length) return;
 
-    const filters = { [this.query.queryParameters.filters]: this.query.filters };
+    const filters = { [queryParameters.filters]: fil };
+    console.log("uri start, ", this.uri);
+
+    console.log("this.prepend()", this.prepend());
+    console.log("filters", filters);
+    console.log(
+      "qs.stringify(filters, { encode: false })",
+      qs.stringify(filters, { encode: false })
+    );
+
     this.uri += this.prepend() + qs.stringify(filters, { encode: false });
+
+    console.log("uri finish, ", this.uri);
   }
 
   sorts() {
-    if (!this.query.sorts.length > 0) {
-      return;
-    }
+    const { sorts, queryParameters } = this.query;
 
-    this.uri +=
-      `${this.prepend() + this.query.queryParameters.sort  }=${  this.query.sorts}`;
+    if (!sorts.length) return;
+
+    this.uri += `${this.prepend() + queryParameters.sort}=${sorts}`;
   }
 
   page() {
@@ -83,11 +83,9 @@ export default class Parser {
       return;
     }
 
-    this.uri +=
-      `${this.prepend() +
-      this.query.queryParameters.page 
-      }=${ 
-      this.query.pageValue}`;
+    this.uri += `${this.prepend() + this.query.queryParameters.page}=${
+      this.query.pageValue
+    }`;
   }
 
   limit() {
@@ -95,18 +93,15 @@ export default class Parser {
       return;
     }
 
-    this.uri +=
-      `${this.prepend() +
-      this.query.queryParameters.limit 
-      }=${ 
-      this.query.limitValue}`;
+    this.uri += `${this.prepend() + this.query.queryParameters.limit}=${
+      this.query.limitValue
+    }`;
   }
 
   params() {
     if (this.query.paramsObj === null) {
       return;
     }
-
 
     this.uri +=
       this.prepend() + qs.stringify(this.query.paramsObj, { encode: false });
