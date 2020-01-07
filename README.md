@@ -29,10 +29,10 @@ const query = new Query();
 
 // /posts?filter[name]=Bob&include=posts,comments&orderBy=-created_at
 const url = query
-  .for('posts')
-  .where('name', 'Bob')
-  .include('posts', 'comments')
-  .orderBy('-created_at')
+  .for("posts")
+  .where("name", "Bob")
+  .include("posts", "comments")
+  .orderBy("-created_at")
   .get();
 ```
 
@@ -81,6 +81,20 @@ const url = query.for('users').where('name', 'Bob').url()); // or .get();
 ```js
 // /users?filter[name]=bob,jerry
 const url = query.for('users').whereIn('name', ['bob', 'jerry']).url()); // or .get();
+```
+
+## whereRelated()
+
+```js
+// /users?filter[name][surname]=Bob
+const url = query.for('users').where('name', 'surname','Bob').url()); // or .get();
+```
+
+## whereInRelated()
+
+```js
+// /users?filter[name][surname]=bob,jerry
+const url = query.for('users').whereIn('name', 'surname',['bob', 'jerry']).url()); // or .get();
 ```
 
 ## select()

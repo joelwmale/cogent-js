@@ -43,8 +43,7 @@ export default class Query {
 
   // set the model for the query
   for(model) {
-    this.model = model;
-
+    if (typeof model === "string") this.model = model;
     return this;
   }
 
@@ -145,7 +144,7 @@ export default class Query {
   whereRelated(key, related, value) {
     if (!key || !value)
       throw new Error(
-        "The where() function takes 2 arguments both of string values."
+        "The where() function takes 3 arguments both of string values."
       );
 
     if (Array.isArray(value) || value instanceof Object)
@@ -153,7 +152,8 @@ export default class Query {
         "The second argument to the where() function must be a string. Use whereIn() if you need to pass in an array."
       );
 
-    this.related[key] = value;
+    this.filters[key] = value;
+    this.related[key] = related;
 
     return this;
   }
@@ -164,7 +164,8 @@ export default class Query {
         "The second argument to the whereIn() function must be an array."
       );
 
-    this.related[key] = array.join(",");
+    this.filters[key] = array.join(",");
+    this.related[key] = related;
 
     return this;
   }

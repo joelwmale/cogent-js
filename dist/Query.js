@@ -59,7 +59,7 @@ function () {
   (0, _createClass2["default"])(Query, [{
     key: "for",
     value: function _for(model) {
-      this.model = model;
+      if (typeof model === "string") this.model = model;
       return this;
     } // return the parsed url
 
@@ -165,16 +165,18 @@ function () {
   }, {
     key: "whereRelated",
     value: function whereRelated(key, related, value) {
-      if (!key || !value) throw new Error("The where() function takes 2 arguments both of string values.");
+      if (!key || !value) throw new Error("The where() function takes 3 arguments both of string values.");
       if (Array.isArray(value) || value instanceof Object) throw new Error("The second argument to the where() function must be a string. Use whereIn() if you need to pass in an array.");
-      this.related[key] = value;
+      this.filters[key] = value;
+      this.related[key] = related;
       return this;
     }
   }, {
     key: "whereInRelated",
     value: function whereInRelated(key, related, array) {
       if (!Array.isArray(array)) throw new Error("The second argument to the whereIn() function must be an array.");
-      this.related[key] = array.join(",");
+      this.filters[key] = array.join(",");
+      this.related[key] = related;
       return this;
     }
   }, {

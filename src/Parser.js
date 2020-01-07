@@ -16,6 +16,7 @@ export default class Parser {
     this.page();
     this.limit();
     this.params();
+    this.related();
 
     return this.uri;
   }
@@ -29,17 +30,17 @@ export default class Parser {
    */
   includes() {
     const { includes, queryParameters } = this.query;
-    if (!includes.length > 0) return;
+    if (!includes.length) return;
 
-    this.uri += `${this.prepend() + queryParameters.includes}=${includes}`;
+    this.uri += `${this.returnBaseUri(queryParameters.includes)}=${includes}`;
   }
 
   appends() {
     const { appends, queryParameters } = this.query;
 
-    if (!this.query.appends.length > 0) return;
+    if (!appends.length) return;
 
-    this.uri += `${this.prepend() + queryParameters.appends}=${appends}`;
+    this.uri += `${this.returnBaseUri(queryParameters.appends)}=${appends}`;
   }
 
   fields() {
@@ -48,7 +49,7 @@ export default class Parser {
     if (!Object.keys(qFields).length) return;
 
     const fields = { [queryParameters.fields]: qFields };
-    this.uri += this.prepend() + qs.stringify(fields, { encode: false });
+    this.uri += this.returnBaseUri(this.returnQsData(fields));
   }
 
   filters() {
@@ -56,18 +57,32 @@ export default class Parser {
     if (!Object.keys(fil).length) return;
 
     const filters = { [queryParameters.filters]: fil };
-    console.log("uri start, ", this.uri);
+    const filterPath = this.returnQsData(filters);
 
-    console.log("this.prepend()", this.prepend());
-    console.log("filters", filters);
-    console.log(
-      "qs.stringify(filters, { encode: false })",
-      qs.stringify(filters, { encode: false })
-    );
+    this.uri += this.returnBaseUri(filterPath);
+  }
 
-    this.uri += this.prepend() + qs.stringify(filters, { encode: false });
+  related() {
+    const { filters: fil, related, queryParameters } = this.query;
+    if (!Object.keys(related).length) return;
 
-    console.log("uri finish, ", this.uri);
+    // since all the magic happens in
+    // qs (qs.stringify(filters, { encode: false });),
+    // and I don’t have any desire to fork it and rewrite (rofl)
+    // we insert such a castil
+    const newFil = {};
+    const keys = Object.keys(fil);
+    keys.forEach(el => {
+      if (related[el]) {
+        newFil[el + "][" + related[el]] = fil[el]; // eslint-disable-line
+      }
+    });
+
+    const filters = { [queryParameters.filters]: newFil };
+
+    const filterPath = this.returnQsData(filters);
+
+    this.uri += this.returnBaseUri(filterPath);
   }
 
   sorts() {
@@ -75,35 +90,36 @@ export default class Parser {
 
     if (!sorts.length) return;
 
-    this.uri += `${this.prepend() + queryParameters.sort}=${sorts}`;
+    this.uri += `${this.returnBaseUri(queryParameters.sort)}=${sorts}`;
   }
 
   page() {
-    if (this.query.pageValue === null) {
-      return;
-    }
+    const { pageValue, queryParameters } = this.query;
+    if (!pageValue) return;
 
-    this.uri += `${this.prepend() + this.query.queryParameters.page}=${
-      this.query.pageValue
-    }`;
+    this.uri += `${this.returnBaseUri(queryParameters.page)}=${pageValue}`;
   }
 
   limit() {
-    if (this.query.limitValue === null) {
-      return;
-    }
+    const { limitValue, queryParameters } = this.query;
+    if (!limitValue) return;
 
-    this.uri += `${this.prepend() + this.query.queryParameters.limit}=${
-      this.query.limitValue
-    }`;
+    this.uri += `${this.returnBaseUri(queryParameters.limit)}=${limitValue}`;
   }
 
   params() {
-    if (this.query.paramsObj === null) {
-      return;
-    }
+    const { paramsObj } = this.query;
+    if (!paramsObj) return;
 
-    this.uri +=
-      this.prepend() + qs.stringify(this.query.paramsObj, { encode: false });
+    this.uri += this.returnBaseUri(this.returnQsData(paramsObj));
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  returnQsData(val) {
+    return qs.stringify(val, { encode: false });
+  }
+
+  returnBaseUri(data) {
+    return this.prepend() + data;
   }
 }

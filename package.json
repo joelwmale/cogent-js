@@ -1,6 +1,6 @@
 {
-  "name": "cogent-js",
-  "version": "0.0.1",
+  "name": "ata-query",
+  "version": "0.1.1",
   "description": "A simple and elegant way to build urls for your REST API",
   "main": "build/index.js",
   "scripts": {
@@ -51,5 +51,13 @@
   },
   "dependencies": {
     "qs": "^6.7.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Pasha8914/cogent-js.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Pasha8914/cogent-js/issues"
+  },
+  "homepage": "https://github.com/Pasha8914/cogent-js#readme"
 }
