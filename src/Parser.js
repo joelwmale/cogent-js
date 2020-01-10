@@ -63,7 +63,7 @@ export default class Parser {
   }
 
   related() {
-    const { filters: fil, related, queryParameters } = this.query;
+    const { relatedFilter: fil, related, queryParameters } = this.query;
     if (!Object.keys(related).length) return;
 
     // since all the magic happens in

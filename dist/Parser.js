@@ -91,7 +91,7 @@ function () {
     key: "related",
     value: function related() {
       var _this$query5 = this.query,
-          fil = _this$query5.filters,
+          fil = _this$query5.relatedFilter,
           related = _this$query5.related,
           queryParameters = _this$query5.queryParameters;
       if (!Object.keys(related).length) return; // since all the magic happens in

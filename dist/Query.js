@@ -34,6 +34,7 @@ function () {
     this.queryParameters = options.queryParameters || {
       filters: "filter",
       related: "filter",
+      relatedFilter: "filter",
       fields: "fields",
       includes: "include",
       appends: "append",
@@ -49,6 +50,7 @@ function () {
     this.fields = {};
     this.filters = {};
     this.related = {};
+    this.relatedFilter = {};
     this.pageValue = null;
     this.limitValue = null;
     this.paramsObj = null;
@@ -167,7 +169,7 @@ function () {
     value: function whereRelated(key, related, value) {
       if (!key || !value) throw new Error("The where() function takes 3 arguments both of string values.");
       if (Array.isArray(value) || value instanceof Object) throw new Error("The second argument to the where() function must be a string. Use whereIn() if you need to pass in an array.");
-      this.filters[key] = value;
+      this.relatedFilter[key] = value;
       this.related[key] = related;
       return this;
     }
@@ -175,7 +177,7 @@ function () {
     key: "whereInRelated",
     value: function whereInRelated(key, related, array) {
       if (!Array.isArray(array)) throw new Error("The second argument to the whereIn() function must be an array.");
-      this.filters[key] = array.join(",");
+      this.relatedFilter[key] = array.join(",");
       this.related[key] = related;
       return this;
     }

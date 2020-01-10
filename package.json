@@ -1,6 +1,6 @@
 {
   "name": "ata-query",
-  "version": "0.1.1",
+  "version": "0.1.2a",
   "description": "A simple and elegant way to build urls for your REST API",
   "main": "build/index.js",
   "scripts": {

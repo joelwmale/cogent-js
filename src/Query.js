@@ -18,6 +18,7 @@ export default class Query {
     this.queryParameters = options.queryParameters || {
       filters: "filter",
       related: "filter",
+      relatedFilter: "filter",
       fields: "fields",
       includes: "include",
       appends: "append",
@@ -34,6 +35,7 @@ export default class Query {
     this.fields = {};
     this.filters = {};
     this.related = {};
+    this.relatedFilter = {};
     this.pageValue = null;
     this.limitValue = null;
     this.paramsObj = null;
@@ -152,7 +154,7 @@ export default class Query {
         "The second argument to the where() function must be a string. Use whereIn() if you need to pass in an array."
       );
 
-    this.filters[key] = value;
+    this.relatedFilter[key] = value;
     this.related[key] = related;
 
     return this;
@@ -164,7 +166,7 @@ export default class Query {
         "The second argument to the whereIn() function must be an array."
       );
 
-    this.filters[key] = array.join(",");
+    this.relatedFilter[key] = array.join(",");
     this.related[key] = related;
 
     return this;
