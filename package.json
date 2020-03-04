@@ -1,13 +1,9 @@
 {
   "name": "ata-query",
-  "version": "0.1.2a",
+  "version": "0.2.0",
   "description": "A simple and elegant way to build urls for your REST API",
   "main": "build/index.js",
   "scripts": {
-    "build": "babel src -d build",
-    "prepare": "yarn build && yarn cc",
-    "test": "jest --watch --coverage",
-    "cc": "jest --coverage",
     "publish:npm": "rm -rf dist && mkdir dist && babel ./src -d dist --copy-files"
   },
   "jest": {
@@ -27,7 +23,7 @@
     "builder",
     "laravel"
   ],
-  "author": "Joel Male, custom adapter Pavel Khavilov",
+  "author": "Pavel Khavilov",
   "license": "MIT",
   "devDependencies": {
     "@babel/cli": "^7.2.3",
@@ -48,9 +44,6 @@
     "eslint-plugin-react": "^7.12.4",
     "jest": "^24.1.0",
     "prettier": "^1.17.0"
-  },
-  "dependencies": {
-    "qs": "^6.7.0"
   },
   "repository": {
     "type": "git",

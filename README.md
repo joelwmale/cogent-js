@@ -1,39 +1,36 @@
-# CogentJS
-
-## A simple and elegant way to build urls for your REST API
-
-<a href="https://www.npmjs.com/package/cogent-js">
-  <img src="https://img.shields.io/npm/v/cogent-js.svg" />
-</a> 
-<a href="https://travis-ci.org/joelwmale/cogent-js">
-  <img src="https://travis-ci.org/joelwmale/cogent-js.svg?branch=master" />
-</a>
-<a href="https://github.com/joelwmale/js-elegant-api-query/blob/master/LICENSE">
-  <img src="https://img.shields.io/apm/l/vim-mode.svg" />
-</a>
+# Ata query
 
 This package helps you to quickly build urls for a REST API, using fluent syntax.
 
-🔥 If you use laravel, the defaults of this package will work with [spatie/laravel-query-builder](https://github.com/spatie/laravel-query-builder).
-
 # Basic usage
 
-Make a url by calling the functions you need:
+Make a url by creating config you need:
 
 ```js
 // Import
-const { Query } = require("cogent-js");
+const { Query } = require("ata-query");
 
 // If custom configuration is required, see Additional Configuration
 const query = new Query();
+const params = {
+  page: 3,
+  limit: 10,
+  include: ["currency"],
+  sort: ["users", "dogs"],
+  append: ["users", "dogs"],
+  select: ["users", "dogs"],
+  withoutConstrains: true,
+  where: { "deleted_at:null": ["true"] },
+  related: [{ data1: "whisky", data2: "cola", value: ["drink", "dance"] }]
+};
 
-// /posts?filter[name]=Bob&include=posts,comments&orderBy=-created_at
-const url = query
-  .for("posts")
-  .where("name", "Bob")
-  .include("posts", "comments")
-  .orderBy("-created_at")
-  .get();
+// "http://baseUrl/path?page=3&per_page=10&include?currency&sort=users,dogs&append=users,dogs&fields=users,dogs&without_constrains=true&filter[deleted_at:null]=true&[data1][data2]=drink,dance"
+const url = query({
+  path,
+  params,
+  baseURL,
+  customConfig: { limit: "per_page" }
+}).get();
 ```
 
 # Installation
@@ -41,13 +38,13 @@ const url = query
 ## Npm
 
 ```js
-npm i cogent-js
+npm i ata-query
 ```
 
 ## Yarn
 
 ```js
-yarn add cogent-js
+yarn add ata-query
 ```
 
 # Additional Configuration
@@ -57,14 +54,30 @@ yarn add cogent-js
 You can optionally set the `base_url` property when instantiating the class to automatically preprend the url to all urls:
 
 ```js
-const { Query } = require('cogent-js');
+const { Query } = require("ata-query");
 
 const query = new Query({
-  base_url: 'http://api.example.com'
+  base_url: "http://api.example.com"
 });
 
-// http://api.example.com/users?filter[name]=Bob
-const url = query.for('users').where('name', 'Bob').url()); // or .get();
+// "http://baseUrl/path?page=3&per_page=10&include?currency&sort=users,dogs&append=users,dogs&fields=users,dogs&without_constrains=true&filter[deleted_at:null]=true&[data1][data2]=drink,dance"
+const params = {
+  page: 3,
+  limit: 10,
+  include: ["currency"],
+  sort: ["users", "dogs"],
+  append: ["users", "dogs"],
+  select: ["users", "dogs"],
+  withoutConstrains: true,
+  where: { "deleted_at:null": ["true"] },
+  related: [{ data1: "whisky", data2: "cola", value: ["drink", "dance"] }]
+};
+const url = query({
+  path,
+  params,
+  baseURL,
+  customConfig: { limit: "per_page" }
+}).get();
 ```
 
 # Available Methods
@@ -72,81 +85,143 @@ const url = query.for('users').where('name', 'Bob').url()); // or .get();
 ## where()
 
 ```js
-// /users?filter[name]=Bob
-const url = query.for('users').where('name', 'Bob').url()); // or .get();
+// /users?filter[users]=true"
+const params = {
+  where: { users: ["true"] }
+};
+const url = query({
+  path,
+  params,
+  baseURL
+}).get();
+
+// /users?filter[monkey]=big,small
+const params = {
+  where: { monkey: ["big", "small"] }
+};
+
+const url = query({
+  path,
+  params,
+  baseURL
+}).get();
 ```
 
-## whereIn()
+## Related()
 
 ```js
-// /users?filter[name]=bob,jerry
-const url = query.for('users').whereIn('name', ['bob', 'jerry']).url()); // or .get();
-```
+// /users?[whisky][cola]=drink,dance
+const params = {
+  related: [{ data1: "whisky", data2: "cola", value: ["drink", "dance"] }]
+};
 
-## whereRelated()
+// /users?[whisky][cola]=drink,dance&filter[cat][dog]=polly
+const params = {
+  related: [
+    { data1: "whisky", data2: "cola", value: ["drink", "dance"] },
+    { a: "cat", b: "dog", value: ["polly"] }
+  ]
+};
 
-```js
-// /users?filter[name][surname]=Bob
-const url = query.for('users').where('name', 'surname','Bob').url()); // or .get();
-```
-
-## whereInRelated()
-
-```js
-// /users?filter[name][surname]=bob,jerry
-const url = query.for('users').whereIn('name', 'surname',['bob', 'jerry']).url()); // or .get();
+const url = query({
+  path,
+  params,
+  baseURL
+}).get();
 ```
 
 ## select()
 
-```js
-// /users?fields=name,age,date_of_birth
-const url = query.for('users').select('name', 'age', 'date_of_birth').url()); // or .get();
-```
+````js
+
+// users?fields=users,dogs
+const params = {
+ select: ["users", "dogs"]
+};
+
+const url = query({
+  path,
+  params,
+  baseURL,
+}).get();```
+
 
 ## include()
 
 ```js
-// /pouserssts?include=posts
-const url = query.for('users').include('posts').url()); // or .get();
-```
+// /users?include=currency
+const params = {
+  include: ["currency"]
+};
+// /users?include=currency,names
+const params = {
+  include: ["currency", "names"]
+};
+
+const url = query({
+  path,
+  params,
+  baseURL,
+}).get();```
 
 ## append()
 
 ```js
+
 // /users?append=full_name,age
-const url = query.for('users').append('full_name', 'age').url()); // or .get();
-```
+const params = {
+  append: ["full_name", "age"]
+};
+
+const url = query({
+  path,
+  params,
+  baseURL,
+}).get();```
 
 ## limit()
 
 ```js
 // /users?limit=5
-const url = query.for('users').limit(5).url()); // or .get();
-```
+const params = {
+  limit: 5
+};
 
-## limit() | Pagination
+const url = query({
+  path,
+  params,
+  baseURL,
+}).get();```
+
+## page()
 
 ```js
-// /users?page=2&limit=5
-const url = query.for('users').limit(5).page(2).url()); // or .get();
-```
+// /users?page=5
+const params = {
+  page: 5
+};
+
+const url = query({
+  path,
+  params,
+  baseURL,
+}).get();```
+
 
 ## sort()
 
 ```js
-// /users?sort=-name,age
-const url = query.for('users').sort('-name', 'age').url()); // or .get();
-```
+const params = {
+  sort: ["-users", "dogs"]
+};
 
-## Custom parameters
+// /users?sort=-users,dogs
+const url = query({
+  path,
+  params,
+  baseURL,
+}).get();```
 
-If required, you can also append your own custom parameters to the url by passing an object to the `params()` function.
-
-```js
-// /users?format=admin
-const url = query.for('users').params({ format: 'admin' }).url()); // or .get();
-```
 
 # Customizing Query Parameters
 
@@ -156,7 +231,7 @@ If you need to change the default values for the query parameters, you can optio
 const { Query } = require("cogent-js");
 
 const query = new Query({
-  queryParameters: {
+  customConfig: {
     include: "include_custom",
     filter: "filter_custom",
     sort: "sort_custom",
@@ -167,16 +242,4 @@ const query = new Query({
   }
 });
 ```
-
-# Contributing
-
-Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
-
-# Thanks
-
-- Inspiration from [robsontenorio/vue-api-query](https://github.com/robsontenorio/vue-api-query).
-- Credits to [spatie](https://github.com/spatie) and [spatie/laravel-query-builder](https://github.com/spatie/laravel-query-builder).
-
-# Contact
-
-Twitter [@joelwmale](https://twitter.com/joelwxd)
+````
