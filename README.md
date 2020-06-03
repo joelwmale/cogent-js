@@ -93,7 +93,7 @@ const url = query.for('users').select('name', 'age', 'date_of_birth').url()); //
 ## include()
 
 ```js
-// /pouserssts?include=posts
+// /users?include=posts
 const url = query.for('users').include('posts').url()); // or .get();
 ```
 
