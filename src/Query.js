@@ -27,8 +27,8 @@ export default class Query {
 
     // initialise variables to hold 
     // the urls data
-    this.includes = [];
-    this.appends = [];
+    this.include = [];
+    this.append = [];
     this.sorts = [];
     this.fields = {};
     this.filters = {};
@@ -75,21 +75,29 @@ export default class Query {
   /**
    * Query builder
    */
-  include(...args) {
-    this.includes = args;
+  includes(...include) {
+    if (!include.length) {
+      throw new Error(`The ${this.queryParameters.includes}s() function takes at least one argument.`);
+    }
+
+    this.include = include;
 
     return this;
   }
 
-  append(...args) {
-    this.appends = args;
+  appends(...append) {
+    if (!append.length) {
+      throw new Error(`The ${this.queryParameters.appends}s() function takes at least one argument.`);
+    }
+
+    this.append = append;
 
     return this;
   }
 
   select(...fields) {
-    if (fields.length === 0) {
-      throw new Error('The fields() function takes a single argument of an array.');
+    if (!fields.length) {
+      throw new Error(`The ${this.queryParameters.fields}() function takes a single argument of an array.`);
     }
 
     // single entity .fields(['age', 'firstname'])
@@ -120,8 +128,17 @@ export default class Query {
   }
 
   whereIn(key, array) {
-    if (!Array.isArray(array))
-      throw new Error('The second argument to the whereIn() function must be an array.');
+    if (!key || !array) {
+      throw new Error('The whereIn() function takes 2 arguments of (string, array).');
+    }
+
+    if (!key && Array.isArray(key) || typeof key === 'object') {
+      throw new Error('The first argument for the whereIn() function must be a string or integer.');
+    }
+
+    if (!Array.isArray(array)) {
+      throw new Error('The second argument for the whereIn() function must be an array.');
+    }
 
     this.filters[key] = array.join(',');
 
@@ -160,7 +177,7 @@ export default class Query {
     }
 
     this.paramsObj = params;
-    
+
     return this;
   }
 

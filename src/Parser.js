@@ -28,27 +28,27 @@ export default class Parser {
    * Parsers
    */
   includes() {
-    if (!this.query.includes.length > 0) {
+    if (!this.query.include.length > 0) {
       return;
     }
 
     this.uri +=
       `${this.prepend() +
-      this.query.queryParameters.includes 
-      }=${ 
-      this.query.includes}`;
+      this.query.queryParameters.includes
+      }=${
+      this.query.include}`;
   }
 
   appends() {
-    if (!this.query.appends.length > 0) {
+    if (!this.query.append.length > 0) {
       return;
     }
 
     this.uri +=
       `${this.prepend() +
-      this.query.queryParameters.appends 
-      }=${ 
-      this.query.appends}`;
+      this.query.queryParameters.appends
+      }=${
+      this.query.append}`;
   }
 
   fields() {
@@ -56,7 +56,7 @@ export default class Parser {
       return;
     }
 
-    const fields = { [this.query.queryParameters.fields]: this.query.fields };
+    const fields = { [`${this.query.queryParameters.fields}[${this.query.model}]`]: this.query.fields };
     this.uri += this.prepend() + qs.stringify(fields, { encode: false });
   }
 
@@ -75,7 +75,7 @@ export default class Parser {
     }
 
     this.uri +=
-      `${this.prepend() + this.query.queryParameters.sort  }=${  this.query.sorts}`;
+      `${this.prepend() + this.query.queryParameters.sort}=${this.query.sorts}`;
   }
 
   page() {
@@ -85,8 +85,8 @@ export default class Parser {
 
     this.uri +=
       `${this.prepend() +
-      this.query.queryParameters.page 
-      }=${ 
+      this.query.queryParameters.page
+      }=${
       this.query.pageValue}`;
   }
 
@@ -97,8 +97,8 @@ export default class Parser {
 
     this.uri +=
       `${this.prepend() +
-      this.query.queryParameters.limit 
-      }=${ 
+      this.query.queryParameters.limit
+      }=${
       this.query.limitValue}`;
   }
 

@@ -1,6 +1,6 @@
 # CogentJS
 
-## A simple and elegant way to build urls for your REST API
+## A beautiful and elegant way to build urls for your REST API
 
 <a href="https://www.npmjs.com/package/cogent-js">
   <img src="https://img.shields.io/npm/v/cogent-js.svg" />
@@ -14,26 +14,26 @@
 
 This package helps you to quickly build urls for a REST API, using fluent syntax.
 
-🔥 If you use laravel, the defaults of this package will work with [spatie/laravel-query-builder](https://github.com/spatie/laravel-query-builder).
+🔥 If you use [Laravel](https://github.com/laravel/laravel) - the defaults of this package will work with [spatie/laravel-query-builder](https://github.com/spatie/laravel-query-builder).
 
 # Basic usage
 
-Make a url by calling the functions you need:
+Make a url by calling the functions you need in a beautiful and elegant way:
 
 ```js
 // Import
 const { Query } = require("cogent-js");
 
-// If custom configuration is required, see Additional Configuration
+// If custom configuration is required, see the Additional Configuration section
 const query = new Query();
 
 // /posts?filter[name]=Bob&include=posts,comments&orderBy=-created_at
 const url = query
-  .for('posts')
-  .where('name', 'Bob')
-  .include('posts', 'comments')
-  .orderBy('-created_at')
-  .get();
+  .for('posts') // the model you're selecting
+  .where('name', 'Bob') // where the models `name` is 'Bob'
+  .includes('posts', 'comments') // include the models related relationships: posts and comments
+  .orderBy('-created_at') // order by -created_at desc
+  .get(); // generate the url and pass it into fetch!
 ```
 
 # Installation
@@ -90,18 +90,18 @@ const url = query.for('users').whereIn('name', ['bob', 'jerry']).url(); // or .g
 const url = query.for('users').select('name', 'age', 'date_of_birth').url(); // or .get();
 ```
 
-## include()
+## includes()
 
 ```js
 // /users?include=posts
-const url = query.for('users').include('posts').url(); // or .get();
+const url = query.for('users').includes('posts').url(); // or .get();
 ```
 
-## append()
+## appends()
 
 ```js
 // /users?append=full_name,age
-const url = query.for('users').append('full_name', 'age').url(); // or .get();
+const url = query.for('users').appends('full_name', 'age').url(); // or .get();
 ```
 
 ## limit()
@@ -143,13 +143,13 @@ const { Query } = require("cogent-js");
 
 const query = new Query({
   queryParameters: {
-    include: "include_custom",
-    filters: "filter_custom",
-    sort: "sort_custom",
-    fields: "fields_custom",
-    append: "append_custom",
-    page: "page_custom",
-    limit: "limit_custom"
+    include: 'include_custom',
+    filters: 'filter_custom',
+    sort: 'sort_custom',
+    fields: 'fields_custom',
+    append: 'append_custom',
+    page: 'page_custom',
+    limit: 'limit_custom'
   }
 });
 ```
@@ -157,11 +157,6 @@ const query = new Query({
 # Contributing
 
 Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
-
-# Thanks
-
-- Inspiration from [robsontenorio/vue-api-query](https://github.com/robsontenorio/vue-api-query).
-- Credits to [spatie](https://github.com/spatie) and [spatie/laravel-query-builder](https://github.com/spatie/laravel-query-builder).
 
 # Contact
 
