@@ -3,8 +3,8 @@ pull_request_rules:
     conditions:
       - base=develop
       - label=dependencies
-      - conflict=false
       - status-success=continuous-integration/travis-ci/pr
+      - -conflict
     actions:
       merge:
         method: merge
