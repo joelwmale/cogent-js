@@ -64,7 +64,7 @@ const query = new Query({
 });
 
 // http://api.example.com/users?filter[name]=Bob
-const url = query.for('users').where('name', 'Bob').url()); // or .get();
+const url = query.for('users').where('name', 'Bob').url(); // or .get();
 ```
 
 # Available Methods
@@ -73,56 +73,56 @@ const url = query.for('users').where('name', 'Bob').url()); // or .get();
 
 ```js
 // /users?filter[name]=Bob
-const url = query.for('users').where('name', 'Bob').url()); // or .get();
+const url = query.for('users').where('name', 'Bob').url(); // or .get();
 ```
 
 ## whereIn()
 
 ```js
 // /users?filter[name]=bob,jerry
-const url = query.for('users').whereIn('name', ['bob', 'jerry']).url()); // or .get();
+const url = query.for('users').whereIn('name', ['bob', 'jerry']).url(); // or .get();
 ```
 
 ## select()
 
 ```js
 // /users?fields=name,age,date_of_birth
-const url = query.for('users').select('name', 'age', 'date_of_birth').url()); // or .get();
+const url = query.for('users').select('name', 'age', 'date_of_birth').url(); // or .get();
 ```
 
 ## include()
 
 ```js
 // /users?include=posts
-const url = query.for('users').include('posts').url()); // or .get();
+const url = query.for('users').include('posts').url(); // or .get();
 ```
 
 ## append()
 
 ```js
 // /users?append=full_name,age
-const url = query.for('users').append('full_name', 'age').url()); // or .get();
+const url = query.for('users').append('full_name', 'age').url(); // or .get();
 ```
 
 ## limit()
 
 ```js
 // /users?limit=5
-const url = query.for('users').limit(5).url()); // or .get();
+const url = query.for('users').limit(5).url(); // or .get();
 ```
 
 ## limit() | Pagination
 
 ```js
 // /users?page=2&limit=5
-const url = query.for('users').limit(5).page(2).url()); // or .get();
+const url = query.for('users').limit(5).page(2).url(); // or .get();
 ```
 
 ## sort()
 
 ```js
 // /users?sort=-name,age
-const url = query.for('users').sort('-name', 'age').url()); // or .get();
+const url = query.for('users').sort('-name', 'age').url(); // or .get();
 ```
 
 ## Custom parameters
@@ -131,7 +131,7 @@ If required, you can also append your own custom parameters to the url by passin
 
 ```js
 // /users?format=admin
-const url = query.for('users').params({ format: 'admin' }).url()); // or .get();
+const url = query.for('users').params({ format: 'admin' }).url(); // or .get();
 ```
 
 # Customizing Query Parameters
