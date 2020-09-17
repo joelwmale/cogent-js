@@ -1,11 +1,11 @@
 {
   "name": "cogent-js",
-  "version": "1.0.4",
+  "version": "2.0.0",
   "description": "A simple and elegant way to build urls for your REST API",
   "main": "build/index.js",
   "scripts": {
     "build": "babel src -d build",
-    "prepare": "yarn build && yarn cc",
+    "prepare": "yarn build",
     "test": "jest"
   },
   "jest": {

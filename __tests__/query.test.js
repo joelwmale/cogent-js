@@ -1,7 +1,7 @@
 import { Query } from '../src';
 
 describe('Query builder', () => {
-  test('it can override filter names', () => {
+  test('it can override query names depending on config', () => {
     const query = new Query({
       queryParameters: {
         includes: 'includes',
@@ -11,10 +11,10 @@ describe('Query builder', () => {
 
     query
       .for('pizza')
-      .include('toppings')
+      .includes('toppings')
       .select('name');
 
-    const expected = '/pizza?includes=toppings&select=name';
+    const expected = '/pizza?includes=toppings&select[pizza]=name';
 
     expect(query.url()).toEqual(expected);
   });
@@ -24,21 +24,67 @@ describe('Query builder', () => {
       base_url: 'https://api.example.com'
     });
 
-    query.for('pizza').include('toppings');
+    query.for('pizza').includes('toppings');
 
     const expected = 'https://api.example.com/pizza?include=toppings';
 
     expect(query.url()).toEqual(expected);
   });
 
-  test('it builds a simple query with include()', () => {
+  test('it throws an error if for() is not included', () => {
+    expect.assertions(1);
+
+    try {
+      const query = new Query();
+
+      query.includes('toppings').url();
+    } catch (e) {
+      expect(e.message).toBe('Please call the for() method before adding filters or calling url() / get().');
+    }
+  });
+
+  test('it builds a simple query with appends()', () => {
     const query = new Query();
 
-    query.for('pizza').include('toppings');
+    query.for('pizza').appends('full_name', 'rating');
+
+    const expected = '/pizza?append=full_name,rating';
+
+    expect(query.url()).toEqual(expected);
+  });
+
+  test('it throws an exception if no argument is passed into appends()', () => {
+    expect.assertions(1);
+
+    try {
+      const query = new Query();
+
+      query.for('pizza').appends();
+    } catch (e) {
+      expect(e.message).toBe('The appends() function takes at least one argument.');
+    }
+  });
+
+  test('it builds a simple query with includes()', () => {
+    const query = new Query();
+
+    query.for('pizza').includes('toppings');
 
     const expected = '/pizza?include=toppings';
 
     expect(query.url()).toEqual(expected);
+  });
+
+  test('it throws an exception if no argument is passed into includes()', () => {
+    expect.assertions(1);
+
+    try {
+      const query = new Query();
+
+      query.for('pizza').includes();
+    } catch (e) {
+      expect(e.message).toBe('The includes() function takes at least one argument.');
+    }
   });
 
   test('it builds a simple query with where()', () => {
@@ -51,6 +97,18 @@ describe('Query builder', () => {
     expect(query.url()).toEqual(expected);
   });
 
+  test('it throws an exception if less than two arguments are passed into where()', () => {
+    expect.assertions(1);
+
+    try {
+      const query = new Query();
+
+      query.for('pizza').where('topping');
+    } catch (e) {
+      expect(e.message).toBe('The where() function takes 2 arguments both of string values.');
+    }
+  });
+
   test('it builds a simple query with whereIn()', () => {
     const query = new Query();
 
@@ -61,14 +119,52 @@ describe('Query builder', () => {
     expect(query.url()).toEqual(expected);
   });
 
-  test('it builds a simple query with append()', () => {
-    const query = new Query();
+  test('it throws an exception if no arguments are passed into whereIn()', () => {
+    expect.assertions(1);
 
-    query.for('pizza').append('full_name', 'rating');
+    try {
+      const query = new Query();
 
-    const expected = '/pizza?append=full_name,rating';
+      query.for('pizza').whereIn();
+    } catch (e) {
+      expect(e.message).toBe('The whereIn() function takes 2 arguments of (string, array).');
+    }
+  });
 
-    expect(query.url()).toEqual(expected);
+  test('it throws an exception if no arguments are passed into whereIn()', () => {
+    expect.assertions(1);
+
+    try {
+      const query = new Query();
+
+      query.for('pizza').whereIn();
+    } catch (e) {
+      expect(e.message).toBe('The whereIn() function takes 2 arguments of (string, array).');
+    }
+  });
+
+  test('it throws an exception if the first argument passed to whereIn() is not a string or integer', () => {
+    expect.assertions(1);
+
+    try {
+      const query = new Query();
+
+      query.for('pizza').whereIn(['oranges'], ['oranges', 'apples']);
+    } catch (e) {
+      expect(e.message).toBe('The first argument for the whereIn() function must be a string or integer.');
+    }
+  });
+
+  test('it throws an exception if the second argument passed to whereIn() is not an array', () => {
+    expect.assertions(1);
+
+    try {
+      const query = new Query();
+
+      query.for('pizza').whereIn('oranges', 'oranges,apples');
+    } catch (e) {
+      expect(e.message).toBe('The second argument for the whereIn() function must be an array.');
+    }
   });
 
   test('it builds a simple query with select()', () => {
@@ -76,9 +172,37 @@ describe('Query builder', () => {
 
     query.for('pizza').select('name', 'date_added');
 
-    const expected = '/pizza?fields=name,date_added';
+    const expected = '/pizza?fields[pizza]=name,date_added';
 
     expect(query.url()).toEqual(expected);
+  });
+
+  test('it throws an exception if no argument is passed into select()', () => {
+    expect.assertions(1);
+
+    try {
+      const query = new Query();
+
+      query.for('pizza').select();
+    } catch (e) {
+      expect(e.message).toBe('The fields() function takes a single argument of an array.');
+    }
+  });
+
+  test('it throws a config appropriate exception if no argument is passed into select()', () => {
+    expect.assertions(1);
+
+    try {
+      const query = new Query({
+        queryParameters: {
+          fields: 'select'
+        }
+      });
+
+      query.for('pizza').select();
+    } catch (e) {
+      expect(e.message).toBe('The select() function takes a single argument of an array.');
+    }
   });
 
   test('it can limit the query', () => {
@@ -123,7 +247,7 @@ describe('Query builder', () => {
     query
       .for('pizza')
       .where('name', 'meatlovers')
-      .params({format: 'admin'});
+      .params({ format: 'admin' });
 
     const expected = '/pizza?filter[name]=meatlovers&format=admin';
 
@@ -159,13 +283,13 @@ describe('Query builder', () => {
     query
       .for('pizza')
       .where('name', 'macaroni_and_cheese')
-      .include('toppings')
-      .append('full_name')
+      .includes('toppings')
+      .appends('full_name')
       .select('name', 'ratings')
-      .params({format: 'basic'});
+      .params({ format: 'basic' });
 
     const expected =
-      '/pizza?include=toppings&append=full_name&fields=name,ratings&filter[name]=macaroni_and_cheese&format=basic';
+      '/pizza?include=toppings&append=full_name&fields[pizza]=name,ratings&filter[name]=macaroni_and_cheese&format=basic';
 
     expect(query.url()).toEqual(expected);
   });
