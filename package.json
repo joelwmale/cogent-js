@@ -1,6 +1,6 @@
 {
   "name": "cogent-js",
-  "version": "1.0.6",
+  "version": "2.0.0",
   "description": "A simple and elegant way to build urls for your REST API",
   "main": "build/index.js",
   "scripts": {
