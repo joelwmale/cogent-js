@@ -4,7 +4,7 @@
   "description": "A simple and elegant way to build urls for your REST API",
   "main": "build/index.js",
   "scripts": {
-    "build": "babel src -d build",
+    "build": "babel src -d build --copy-files",
     "prepare": "yarn build",
     "test": "jest"
   },
