@@ -1,0 +1,36 @@
+name: cogent-js
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 14.x
+      - run: yarn
+      - run: yarn build
+      - run: yarn jest
+  publish-gpr:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 14.x
+          registry-url: https://npm.pkg.github.com/
+          scope: '@jermashley'
+      - run: git config --global user.email "$GITHUB_ACTOR@users.noreply.github.com" && git config --global user.name "$GITHUB_ACTOR"
+      - run: yarn install
+      - run: yarn version --minor
+      - run: yarn build
+      - run: git push --tags && git push
+      - run: yarn publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.ID_GITHUB_TOKEN}}
