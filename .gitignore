@@ -2,3 +2,5 @@
 /build/
 /coverage/
 yarn-error.log
+
+/.idea
